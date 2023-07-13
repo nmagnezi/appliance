@@ -34,6 +34,14 @@ build-appliance:
 build-openshift-ci-test-bin:
 	./hack/setup_env.sh
 
+install-test-tools:
+	./hack/install_tools.sh
+
+
+	go install github.com/axw/gocov/gocov@latest
+	go install github.com/AlekSi/gocov-xml@v0.0.0-20190121064608-3a14fb1c4737
+
+
 lint:
 	golangci-lint run -v --timeout=10m
 
@@ -78,7 +86,7 @@ generate-mocks:
 	find . -name 'mock_*.go' -type f -not -path './vendor/*' -delete
 	go generate -v $(shell go list ./...)
 
-unit-test:
+unit-test: install-test-tools
 	$(MAKE) _unit_test TIMEOUT=30m TEST="$(or $(TEST),$(shell go list ./...))"
 
 
